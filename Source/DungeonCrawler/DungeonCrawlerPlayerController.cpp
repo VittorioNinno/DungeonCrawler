@@ -1,20 +1,22 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "DungeonCrawlerPlayerController.h"
-#include "GameFramework/Pawn.h"
-#include "Blueprint/AIBlueprintHelperLibrary.h"
-#include "NiagaraSystem.h"
-#include "NiagaraFunctionLibrary.h"
+
 #include "DungeonCrawlerCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/Pawn.h"
 #include "Engine/World.h"
 #include "EnhancedInputComponent.h"
-#include "InputActionValue.h"
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
-ADungeonCrawlerPlayerController::ADungeonCrawlerPlayerController()
+ADungeonCrawlerPlayerController::ADungeonCrawlerPlayerController(): ShortPressThreshold(0),
+                                                                    DefaultMappingContext(nullptr),
+                                                                    MoveForwardAction(nullptr),
+                                                                    MoveRightAction(nullptr), SprintAction(nullptr),
+                                                                    bMoveToMouseCursor(0), bIsTouch(false)
 {
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;
@@ -42,17 +44,9 @@ void ADungeonCrawlerPlayerController::SetupInputComponent()
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
 	{
-		// Setup mouse input events
-		EnhancedInputComponent->BindAction(SetDestinationClickAction, ETriggerEvent::Started, this, &ADungeonCrawlerPlayerController::OnInputStarted);
-		EnhancedInputComponent->BindAction(SetDestinationClickAction, ETriggerEvent::Triggered, this, &ADungeonCrawlerPlayerController::OnSetDestinationTriggered);
-		EnhancedInputComponent->BindAction(SetDestinationClickAction, ETriggerEvent::Completed, this, &ADungeonCrawlerPlayerController::OnSetDestinationReleased);
-		EnhancedInputComponent->BindAction(SetDestinationClickAction, ETriggerEvent::Canceled, this, &ADungeonCrawlerPlayerController::OnSetDestinationReleased);
-
-		// Setup touch input events
-		EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Started, this, &ADungeonCrawlerPlayerController::OnInputStarted);
-		EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Triggered, this, &ADungeonCrawlerPlayerController::OnTouchTriggered);
-		EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Completed, this, &ADungeonCrawlerPlayerController::OnTouchReleased);
-		EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Canceled, this, &ADungeonCrawlerPlayerController::OnTouchReleased);
+		EnhancedInputComponent->BindAction(MoveForwardAction, ETriggerEvent::Triggered, this, &ADungeonCrawlerPlayerController::MoveForward);
+		EnhancedInputComponent->BindAction(MoveRightAction, ETriggerEvent::Triggered, this, &ADungeonCrawlerPlayerController::MoveRight);
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &ADungeonCrawlerPlayerController::ToggleSprint);
 	}
 	else
 	{
@@ -60,66 +54,42 @@ void ADungeonCrawlerPlayerController::SetupInputComponent()
 	}
 }
 
-void ADungeonCrawlerPlayerController::OnInputStarted()
+void ADungeonCrawlerPlayerController::MoveForward(const FInputActionValue& Value)
 {
-	StopMovement();
-}
-
-// Triggered every frame when the input is held down
-void ADungeonCrawlerPlayerController::OnSetDestinationTriggered()
-{
-	// We flag that the input is being pressed
-	FollowTime += GetWorld()->GetDeltaSeconds();
-	
-	// We look for the location in the world where the player has pressed the input
-	FHitResult Hit;
-	bool bHitSuccessful = false;
-	if (bIsTouch)
+	if (APawn* ControlledPawn = GetPawn())
 	{
-		bHitSuccessful = GetHitResultUnderFinger(ETouchIndex::Touch1, ECollisionChannel::ECC_Visibility, true, Hit);
-	}
-	else
-	{
-		bHitSuccessful = GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, Hit);
-	}
-
-	// If we hit a surface, cache the location
-	if (bHitSuccessful)
-	{
-		CachedDestination = Hit.Location;
-	}
-	
-	// Move towards mouse pointer or touch
-	APawn* ControlledPawn = GetPawn();
-	if (ControlledPawn != nullptr)
-	{
-		FVector WorldDirection = (CachedDestination - ControlledPawn->GetActorLocation()).GetSafeNormal();
-		ControlledPawn->AddMovementInput(WorldDirection, 1.0, false);
+		if (ADungeonCrawlerCharacter* ControlledCharacter = Cast<ADungeonCrawlerCharacter>(ControlledPawn))
+		{
+			ControlledCharacter->MoveForward(Value.Get<float>());
+		}
 	}
 }
 
-void ADungeonCrawlerPlayerController::OnSetDestinationReleased()
+void ADungeonCrawlerPlayerController::MoveRight(const FInputActionValue& Value)
 {
-	// If it was a short press
-	if (FollowTime <= ShortPressThreshold)
+	if (APawn* ControlledPawn = GetPawn())
 	{
-		// We move there and spawn some particles
-		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, CachedDestination);
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursor, CachedDestination, FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
+		if (ADungeonCrawlerCharacter* ControlledCharacter = Cast<ADungeonCrawlerCharacter>(ControlledPawn))
+		{
+			ControlledCharacter->MoveRight(Value.Get<float>());
+		}
 	}
-
-	FollowTime = 0.f;
 }
 
-// Triggered every frame when the input is held down
-void ADungeonCrawlerPlayerController::OnTouchTriggered()
+void ADungeonCrawlerPlayerController::ToggleSprint()
 {
-	bIsTouch = true;
-	OnSetDestinationTriggered();
-}
-
-void ADungeonCrawlerPlayerController::OnTouchReleased()
-{
-	bIsTouch = false;
-	OnSetDestinationReleased();
+	if (APawn* ControlledPawn = GetPawn())
+	{
+		if (ADungeonCrawlerCharacter* ControlledCharacter = Cast<ADungeonCrawlerCharacter>(ControlledPawn))
+		{
+			if (ControlledCharacter->GetCharacterMovement()->MaxWalkSpeed == ControlledCharacter->GetMovementSpeed())
+			{
+				ControlledCharacter->StartSprint();
+			}
+			else
+			{
+				ControlledCharacter->StopSprint();
+			}
+		}
+	}
 }

@@ -13,7 +13,6 @@ class ADungeonCrawlerCharacter : public ACharacter
 
 public:
 	ADungeonCrawlerCharacter();
-
 	// Called every frame.
 	virtual void Tick(float DeltaSeconds) override;
 
@@ -21,6 +20,15 @@ public:
 	FORCEINLINE class UCameraComponent* GetTopDownCameraComponent() const { return TopDownCameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	/** Returns CameraBoom subobject **/
+	FORCEINLINE float GetMovementSpeed() const { return MovementSpeed; }
+	void MoveForward(float Value);
+	void MoveRight(float Value);
+	void StartSprint();
+	void StopSprint();
+
+protected:
+	virtual void BeginPlay() override;
 
 private:
 	/** Top down camera */
@@ -30,5 +38,11 @@ private:
 	/** Camera boom positioning the camera above the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = true))
+	float MovementSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = true))
+	float SprintSpeed;
 };
 

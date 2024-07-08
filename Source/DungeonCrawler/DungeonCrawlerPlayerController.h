@@ -50,7 +50,19 @@ public:
 	/** Sprint Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* SprintAction;
+	
+	/** Look Up Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* LookUpAction;
 
+	/** Look Right Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* LookRightAction;
+
+	/** Look Reset Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* LookResetAction;
+	
 	bool GetInputType() const {return bIsUsingGamepad; }
 
 protected:
@@ -65,6 +77,10 @@ protected:
 	void MoveForward(const FInputActionValue& Value);
 	void MoveRight(const FInputActionValue& Value);
 	void ToggleSprint();
+
+	void LookUp(const FInputActionValue& Value);
+	void LookRight(const FInputActionValue& Value);
+	void ResetLook();
 	
 private:
 	FVector CachedDestination;

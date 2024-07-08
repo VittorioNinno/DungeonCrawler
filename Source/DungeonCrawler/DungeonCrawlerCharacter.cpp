@@ -90,3 +90,15 @@ void ADungeonCrawlerCharacter::StopSprint()
 {
 	GetCharacterMovement()->MaxWalkSpeed = MovementSpeed;
 }
+
+void ADungeonCrawlerCharacter::LookUp(float Value)
+{
+}
+
+void ADungeonCrawlerCharacter::LookRight(float Value)
+{
+}
+
+void ADungeonCrawlerCharacter::ResetCamera()
+{
+}

@@ -22,10 +22,15 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE float GetMovementSpeed() const { return MovementSpeed; }
+
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 	void StartSprint();
 	void StopSprint();
+
+	void LookUp(float Value);
+	void LookRight(float Value);
+	void ResetCamera();
 
 protected:
 	virtual void BeginPlay() override;
@@ -44,5 +49,7 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = true))
 	float SprintSpeed;
+
+	
 };
 

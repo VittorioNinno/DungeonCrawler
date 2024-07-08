@@ -18,6 +18,9 @@ ADungeonCrawlerPlayerController::ADungeonCrawlerPlayerController(): ShortPressTh
                                                                     GamepadAnyKeyAction(nullptr),
                                                                     MoveForwardAction(nullptr),
                                                                     MoveRightAction(nullptr), SprintAction(nullptr),
+                                                                    LookUpAction(nullptr),
+                                                                    LookRightAction(nullptr),
+                                                                    LookResetAction(nullptr),
                                                                     bMoveToMouseCursor(0), bIsUsingGamepad(false)
 {
 	bShowMouseCursor = true;
@@ -51,6 +54,10 @@ void ADungeonCrawlerPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(MoveForwardAction, ETriggerEvent::Triggered, this, &ADungeonCrawlerPlayerController::MoveForward);
 		EnhancedInputComponent->BindAction(MoveRightAction, ETriggerEvent::Triggered, this, &ADungeonCrawlerPlayerController::MoveRight);
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &ADungeonCrawlerPlayerController::ToggleSprint);
+
+		EnhancedInputComponent->BindAction(LookUpAction, ETriggerEvent::Triggered, this, &ADungeonCrawlerPlayerController::LookUp);
+		EnhancedInputComponent->BindAction(LookRightAction, ETriggerEvent::Triggered, this, &ADungeonCrawlerPlayerController::LookRight);
+		EnhancedInputComponent->BindAction(LookResetAction, ETriggerEvent::Triggered, this, &ADungeonCrawlerPlayerController::ResetLook);
 	}
 	else
 	{
@@ -94,6 +101,39 @@ void ADungeonCrawlerPlayerController::ToggleSprint()
 			{
 				ControlledCharacter->StopSprint();
 			}
+		}
+	}
+}
+
+void ADungeonCrawlerPlayerController::LookUp(const FInputActionValue& Value)
+{
+	if (APawn* ControlledPawn = GetPawn())
+	{
+		if (ADungeonCrawlerCharacter* ControlledCharacter = Cast<ADungeonCrawlerCharacter>(ControlledPawn))
+		{
+			ControlledCharacter->LookUp(Value.Get<float>());
+		}
+	}
+}
+
+void ADungeonCrawlerPlayerController::LookRight(const FInputActionValue& Value)
+{
+	if (APawn* ControlledPawn = GetPawn())
+	{
+		if (ADungeonCrawlerCharacter* ControlledCharacter = Cast<ADungeonCrawlerCharacter>(ControlledPawn))
+		{
+			ControlledCharacter->LookRight(Value.Get<float>());
+		}
+	}
+}
+
+void ADungeonCrawlerPlayerController::ResetLook()
+{
+	if (APawn* ControlledPawn = GetPawn())
+	{
+		if (ADungeonCrawlerCharacter* ControlledCharacter = Cast<ADungeonCrawlerCharacter>(ControlledPawn))
+		{
+			ControlledCharacter->ResetCamera();
 		}
 	}
 }

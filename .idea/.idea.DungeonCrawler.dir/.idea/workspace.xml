@@ -11,6 +11,9 @@
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DungeonCrawler.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DungeonCrawler.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/TopDown/Blueprints/BP_TopDownPlayerController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/TopDown/Blueprints/BP_TopDownPlayerController.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/TopDown/Input/IMC_Default.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/TopDown/Input/IMC_Default.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/TopDown/Maps/TopDownMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/TopDown/Maps/TopDownMap.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DungeonCrawler/DungeonCrawlerCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DungeonCrawler/DungeonCrawlerCharacter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DungeonCrawler/DungeonCrawlerCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DungeonCrawler/DungeonCrawlerCharacter.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/DungeonCrawler/DungeonCrawlerPlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DungeonCrawler/DungeonCrawlerPlayerController.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/DungeonCrawler/DungeonCrawlerPlayerController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DungeonCrawler/DungeonCrawlerPlayerController.h" afterDir="false" />
     </list>
@@ -136,7 +139,7 @@
       <workItem from="1720108695082" duration="4167000" />
       <workItem from="1720113100653" duration="1506000" />
       <workItem from="1720114648792" duration="3914000" />
-      <workItem from="1720445082377" duration="1332000" />
+      <workItem from="1720445082377" duration="3796000" />
     </task>
     <servers />
   </component>

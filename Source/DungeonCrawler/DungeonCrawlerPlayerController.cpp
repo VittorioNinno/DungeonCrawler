@@ -5,7 +5,6 @@
 #include "DungeonCrawlerCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Pawn.h"
-#include "Engine/World.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"

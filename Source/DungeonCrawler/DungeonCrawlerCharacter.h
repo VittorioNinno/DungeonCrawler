@@ -25,12 +25,12 @@ public:
 
 	void MoveForward(float Value);
 	void MoveRight(float Value);
-	void StartSprint();
-	void StopSprint();
+	void StartSprint() const;
+	void StopSprint() const;
 
-	void LookUp(float Value);
-	void LookRight(float Value);
-	void ResetCamera();
+	void LookUp(float Value) const;
+	void LookRight(float Value) const;
+	void ResetCamera() const;
 
 protected:
 	virtual void BeginPlay() override;
@@ -50,6 +50,19 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = true))
 	float SprintSpeed;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	float CameraMoveSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	float MaxCameraOffsetX;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	float MaxCameraOffsetY;
 	
+	FVector InitialCameraBoomLocation;
+	FRotator InitialCameraBoomRotation;
+	float InitialCameraBoomArmLength;
+
+	FTimerHandle ResetCameraTimer;
 };
 

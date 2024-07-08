@@ -43,14 +43,26 @@ ADungeonCrawlerCharacter::ADungeonCrawlerCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 
+	// Initialize Movement Variable
 	MovementSpeed = 250.0f;
 	SprintSpeed = 550.0f;
+
+	// Initialize Camera Variable
+	CameraMoveSpeed = 500.0f;
+	MaxCameraOffsetX = 500.0f;
+	MaxCameraOffsetY = 500.0f;
 }
 
 void ADungeonCrawlerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	// Save initial camera boom settings
+	InitialCameraBoomLocation = CameraBoom->GetComponentLocation();
+	InitialCameraBoomRotation = CameraBoom->GetComponentRotation();
+	InitialCameraBoomArmLength = CameraBoom->TargetArmLength;
 
+	// Set Default Movement Speed
 	GetCharacterMovement()->MaxWalkSpeed = MovementSpeed;
 }
 
@@ -81,24 +93,59 @@ void ADungeonCrawlerCharacter::MoveRight(float Value)
 	}
 }
 
-void ADungeonCrawlerCharacter::StartSprint()
+void ADungeonCrawlerCharacter::StartSprint() const
 {
 	GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
 }
 
-void ADungeonCrawlerCharacter::StopSprint()
+void ADungeonCrawlerCharacter::StopSprint() const
 {
 	GetCharacterMovement()->MaxWalkSpeed = MovementSpeed;
 }
 
-void ADungeonCrawlerCharacter::LookUp(float Value)
+void ADungeonCrawlerCharacter::LookUp(float Value) const
 {
+	if (Value != 0.0f)
+	{
+		FVector NewCameraPosition = TopDownCameraComponent->GetRelativeLocation();
+		float NewZ = FMath::Clamp(NewCameraPosition.Z + Value * CameraMoveSpeed * GetWorld()->GetDeltaSeconds(), -MaxCameraOffsetX, MaxCameraOffsetX);
+		NewCameraPosition.Z = NewZ;
+		TopDownCameraComponent->SetRelativeLocation(NewCameraPosition);
+	}
 }
 
-void ADungeonCrawlerCharacter::LookRight(float Value)
+void ADungeonCrawlerCharacter::LookRight(float Value) const
 {
+	if (Value != 0.0f)
+	{
+		FVector NewCameraPosition = TopDownCameraComponent->GetRelativeLocation();
+		float NewY = FMath::Clamp(NewCameraPosition.Y + Value * CameraMoveSpeed * GetWorld()->GetDeltaSeconds(), -MaxCameraOffsetY, MaxCameraOffsetY);
+		NewCameraPosition.Y = NewY;
+		TopDownCameraComponent->SetRelativeLocation(NewCameraPosition);
+	}
 }
 
-void ADungeonCrawlerCharacter::ResetCamera()
+void ADungeonCrawlerCharacter::ResetCamera() const
 {
+	if (CameraBoom != nullptr)
+	{
+		// Calculate the new boom location based on the current actor location
+		FVector NewBoomLocation = GetActorLocation();
+
+		// Reset the camera boom to the new location
+		CameraBoom->SetWorldLocation(NewBoomLocation);
+		CameraBoom->SetRelativeRotation(InitialCameraBoomRotation);
+		CameraBoom->TargetArmLength = InitialCameraBoomArmLength;
+	}
+	
+	if (TopDownCameraComponent != nullptr)
+	{
+		// Ensure the camera component itself is correctly centered relative to the boom
+		TopDownCameraComponent->SetRelativeLocation(FVector(0, 0, 0));
+	}
 }
+
+
+
+
+

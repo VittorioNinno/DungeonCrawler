@@ -14,14 +14,15 @@ DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 ADungeonCrawlerPlayerController::ADungeonCrawlerPlayerController(): ShortPressThreshold(0),
                                                                     DefaultMappingContext(nullptr),
+                                                                    AnyKeyAction(nullptr),
+                                                                    GamepadAnyKeyAction(nullptr),
                                                                     MoveForwardAction(nullptr),
                                                                     MoveRightAction(nullptr), SprintAction(nullptr),
-                                                                    bMoveToMouseCursor(0), bIsTouch(false)
+                                                                    bMoveToMouseCursor(0), bIsUsingGamepad(false)
 {
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;
 	CachedDestination = FVector::ZeroVector;
-	FollowTime = 0.f;
 }
 
 void ADungeonCrawlerPlayerController::BeginPlay()
@@ -44,6 +45,9 @@ void ADungeonCrawlerPlayerController::SetupInputComponent()
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
 	{
+		EnhancedInputComponent->BindAction(AnyKeyAction, ETriggerEvent::Triggered, this, &ADungeonCrawlerPlayerController::SetKeyboardInput);
+		EnhancedInputComponent->BindAction(GamepadAnyKeyAction, ETriggerEvent::Triggered, this, &ADungeonCrawlerPlayerController::SetGamepadInput);
+		
 		EnhancedInputComponent->BindAction(MoveForwardAction, ETriggerEvent::Triggered, this, &ADungeonCrawlerPlayerController::MoveForward);
 		EnhancedInputComponent->BindAction(MoveRightAction, ETriggerEvent::Triggered, this, &ADungeonCrawlerPlayerController::MoveRight);
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &ADungeonCrawlerPlayerController::ToggleSprint);

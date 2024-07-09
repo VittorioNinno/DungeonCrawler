@@ -43,6 +43,9 @@ ADungeonCrawlerCharacter::ADungeonCrawlerCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 
+	// Add "Player" tag
+	Tags.Add(FName("Player"));
+
 	// Initialize Movement Variable
 	MovementSpeed = 250.0f;
 	SprintSpeed = 550.0f;

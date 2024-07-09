@@ -44,7 +44,6 @@ void AEnemyBase::SetEnemyComponents(UBehaviorTreeComponent* InBehaviorTree, UPaw
 
 void AEnemyBase::SetTarget(APawn* InTarget)
 {
-	UE_LOG(LogTemp, Warning, TEXT("SEE PAWN"));
 	if(InTarget == UGameplayStatics::GetPlayerPawn(this, 0))
 	{
 		CurrentTarget = InTarget;

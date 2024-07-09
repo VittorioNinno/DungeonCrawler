@@ -40,4 +40,8 @@ void AEnemyDrone::Tick(float DeltaSeconds)
 void AEnemyDrone::HandleSeeTaget()
 {
 	Super::HandleSeeTaget();
+	if(SpotLightComponent)
+	{
+		SpotLightComponent->SetLightColor(FColor::Red);
+	}
 }

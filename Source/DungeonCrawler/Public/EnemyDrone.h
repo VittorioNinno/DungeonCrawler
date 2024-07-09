@@ -6,6 +6,7 @@
 #include "EnemyDroneSplineToFollow.h"
 #include "EnemyBase.h"
 #include "Components/SplineComponent.h"
+#include "Components/SpotLightComponent.h"
 #include "EnemyDrone.generated.h"
 
 /**
@@ -17,23 +18,23 @@ class DUNGEONCRAWLER_API AEnemyDrone : public AEnemyBase
 	GENERATED_BODY()
 
 protected:
-
+	
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual  void HandleSeeTaget() override;
-	
+
+	// Components
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	USpotLightComponent* SpotLightComponent;
+	// Movements
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	AEnemyDroneSplineToFollow* ActorSplineToFollow;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	USplineComponent* SplineToFollow;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-	float MovementSpeedOnSpline;
-
-	float LocationInSpline = 0;
-
-	float CurrentMovementTime;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float MovementTimer;
+	
+	float CurrentMovementTime;
 
 
 };

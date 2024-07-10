@@ -51,6 +51,8 @@ protected:
 	int32 MaxHealth;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int32 Damage;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+    int32 ExpToGive;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fight")
 	AActor* CurrentTarget;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Fight")
@@ -63,7 +65,7 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void SetEnemyComponents(UBehaviorTreeComponent* InBehaviorTree, UPawnSensingComponent* InSensingComponent);
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void SetTarget(APawn* InTarget);
 
 	virtual void HandleSeeTaget();

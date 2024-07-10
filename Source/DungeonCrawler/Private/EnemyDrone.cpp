@@ -56,3 +56,9 @@ void AEnemyDrone::HandleSeeTaget()
 		SpotLightComponent->SetLightColor(FColor::Red);
 	}
 }
+
+void AEnemyDrone::HandleHacking()
+{
+	IIHackable::HandleHacking();
+	UE_LOG(LogTemp, Error, TEXT("Hacked"));
+}

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "EnemyDroneSplineToFollow.h"
 #include "EnemyBase.h"
+#include "IHackable.h"
 #include "Components/SplineComponent.h"
 #include "Components/SpotLightComponent.h"
 #include "EnemyDrone.generated.h"
@@ -13,7 +14,7 @@
  * 
  */
 UCLASS()
-class DUNGEONCRAWLER_API AEnemyDrone : public AEnemyBase
+class DUNGEONCRAWLER_API AEnemyDrone : public AEnemyBase, public IIHackable
 {
 	GENERATED_BODY()
 
@@ -39,4 +40,5 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void FollowTarget(FVector LocationToFollow);
 
+	virtual void HandleHacking() override;
 };

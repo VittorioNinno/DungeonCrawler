@@ -3,6 +3,9 @@
 
 #include "EnemyDrone.h"
 
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+
 void AEnemyDrone::BeginPlay()
 {
 	Super::BeginPlay();
@@ -11,6 +14,8 @@ void AEnemyDrone::BeginPlay()
 	{
 		SplineToFollow = ActorSplineToFollow->SplineComponent;
 	}
+	
+	MovementTimer = SplineToFollow->GetSplineLength() / this->GetCharacterMovement()->GetMaxSpeed();
 }
 
 void AEnemyDrone::Tick(float DeltaSeconds)
@@ -34,6 +39,12 @@ void AEnemyDrone::Tick(float DeltaSeconds)
 				CurrentMovementTime = 0;
 			}
 		}
+	}
+	else if(CurrentTarget)
+	{
+		FRotator LookRot = UKismetMathLibrary::FindLookAtRotation(this->GetActorLocation(), CurrentTarget->GetActorLocation());
+		SetActorRotation(LookRot);
+		FollowTarget(CurrentTarget->GetActorLocation());
 	}
 }
 

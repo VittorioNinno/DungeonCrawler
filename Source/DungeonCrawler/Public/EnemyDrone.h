@@ -36,5 +36,7 @@ protected:
 	
 	float CurrentMovementTime;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void FollowTarget(FVector LocationToFollow);
 
 };
